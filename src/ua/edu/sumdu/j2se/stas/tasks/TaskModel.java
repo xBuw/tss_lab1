@@ -81,11 +81,12 @@ public class TaskModel implements Cloneable, Serializable {
     /**
      * Set title task
      */
-    public void setTitle(String title) {
+    public TaskModel setTitle(String title) {
         if (title == null) {
             throw new IllegalArgumentException("title is null");
         }
         this.title = title;
+        return this;
     }
 
     /**
@@ -105,16 +106,18 @@ public class TaskModel implements Cloneable, Serializable {
     /**
      * Set activity task
      */
-    public void setActive(boolean active) {
+    public TaskModel setActive(boolean active) {
         this.active = active;
+        return this;
     }
 
-    public void setTime(Date time) {
+    public TaskModel setTime(Date time) {
         if (time == null) {
             throw new IllegalArgumentException("time is negative");
         }
         this.start = new Date(time.getTime());
         this.end = null;
+        return this;
     }
 
     /**
@@ -124,13 +127,14 @@ public class TaskModel implements Cloneable, Serializable {
      * @param end      - last call task
      * @param interval - interval with tasks
      */
-    public void setTime(Date start, Date end, int interval) {
+    public TaskModel setTime(Date start, Date end, int interval) {
         if (!(title != null && start != null && end != null && interval >= 0)) {
             throw new IllegalArgumentException("title is null or time is negative");
         }
         this.start = new Date(start.getTime());
         this.end = new Date(end.getTime());
         this.interval = interval;
+        return this;
     }
 
 
