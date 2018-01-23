@@ -52,16 +52,14 @@ public class TaskListController {
     }
 
     public static void main(String[] args) {
-        String line;
-
-        System.out.print("You want load old task list, otherwise it will be deleted?[Y,n]:");
-        line = sc.nextLine();
         File file = new File("TaskListModel");
+        String line;
+        line = question("You want load old task list, otherwise it will be deleted?[Y,n]:");
         if (line.equals("Y") || line.equals("y") || line.equals("")) {
             if (file.exists())
                 TaskIOModel.readText(list, file);
             else
-                System.out.println("Your old task list is lost.");
+                System.out.println("Your old task list is lost...");
         }
 
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), new Date(new Date().getTime() + 1000 * 60 * 60 * 24)));
