@@ -69,77 +69,72 @@ public class TaskListController {
         thread.start();
 
         line = question("Menu task manager: edit, add, remove, show, calendar, quit : ");
+
         while (!line.equals("quit")) {
-            switch (line) {
-                case "edit":
-                    if (isEmpty()) {
-                        System.out.println("empty list!");
-                        break;
-                    }
-                    TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task:")));
-                    String subMenu = question(editTask + ". What you want change(title,time or activity)?");
-                    switch (subMenu) {
-                        case "title":
-                            editTask(editTask, editTask.clone().setTitle(question("Input new task title:")));
-                            break;
-                        case "time":
-                            Date start = null, end = null, interval;
-                            SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                            SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
-                            try {
+            try {
+                switch (line) {
+                    case "edit":
+                        TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task:")));
+                        String subMenu = question(editTask + ". What you want change(title,time or activity)?");
+                        switch (subMenu) {
+                            case "title":
+                                editTask(editTask, editTask.clone().setTitle(question("Input new task title:")));
+                                break;
+                            case "time":
+                                Date start = null, end = null, interval;
+                                SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+                                SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
                                 start = timeForm.parse(question("Input new task start time[yyyy-mm-dd hh-mm]:"));
-                                end = timeForm.parse(question("Input new task end time, empty for single task:"));
-                                interval = interForm.parse(question("Input new interval [dd-hh-mm-ss]:"));
-                                editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 26));
-                            } catch (ParseException e) {
-                                if (start != null && end == null)
+                                String endString = question("Input new task end time, empty for single task:");
+                                if (endString.equals(""))
                                     editTask(editTask, editTask.clone().setTime(start));
-                                else
-                                    System.out.println("incorrect format date");
-                            }
-                            break;
-                        case "activity":
-                            editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
-                            break;
-                    }
-                    break;
-                case "add":
-                    ArrayTaskList single = new ArrayTaskList();
-                    TaskIOModel.read(single, new StringReader(question("input new task (format: \"task name\" at [year-mm-dd hh:mm:ss.000])" +
-                            " or " + System.lineSeparator() + "\"task name\" from [year-mm-dd hh:mm:ss.000] to [year-mm-dd hh:mm:ss.000] every [2 day(s), 60 second(s)];")));
-                    editTask(null, single.getTask(0));
-                    break;
-                case "remove":
-                    try {
+                                else {
+                                    end = timeForm.parse(endString);
+                                    interval = interForm.parse(question("Input new interval [dd-hh-mm-ss]:"));
+                                    editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 26));
+                                }
+                                break;
+                            case "activity":
+                                editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
+                                break;
+                        }
+
+                        break;
+                    case "add":
+                        ArrayTaskList single = new ArrayTaskList();
+                        TaskIOModel.read(single, new StringReader(question("Input new task. Format: (\"task name\" at [year-mm-dd hh:mm:ss.000];)" +
+                                " or " + System.lineSeparator() + ("\"task name\" from [year-mm-dd hh:mm:ss.000] to [year-mm-dd hh:mm:ss.000] every [2 day(s), 60 second(s)];)"))));
+                        editTask(null, single.getTask(0));
+                        break;
+                    case "remove":
                         editTask(list.getTask(Integer.valueOf(question("Remove task.input index task:"))), null);
-                    } catch (RuntimeException e) {
-                        System.out.println("Exception: "+ e.getMessage());
-                    }
-                    break;
-                case "show":
-                    for (int i = 0; i < list.size(); i++) {
-                        System.out.println(i + ": " + list.getTask(i));
-                    }
-                    break;
-                case "calendar":
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                    try {
-                        Date start = formatter.parse(question("input start date year-mm-dd"));
-                        Date end = formatter.parse(question("input end date year-mm-dd"));
+                        break;
+                    case "show":
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.println(i + ": " + list.getTask(i));
+                        }
+                        break;
+                    case "calendar":
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        Date start = formatter.parse(question("input start date year-mm-dd: "));
+                        Date end = formatter.parse(question("input end date year-mm-dd: "));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
-                    } catch (ParseException e) {
-                        System.out.println("incorrect format date");
-                    }
-                    break;
-                case "quit":
-                    TaskIOModel.writeText(list, file);
-                    break;
-                default:
-                    System.out.println("unknown operation");
-                    break;
+                        break;
+                    case "quit":
+                        TaskIOModel.writeText(list, file);
+                        break;
+                    default:
+                        System.out.println("unknown operation");
+                        break;
+                }
+            } catch (RuntimeException e) {
+                System.out.println("Exception: " + e.getMessage());
+            } catch (ParseException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                line = question("Menu task manager: edit, add, remove, show, calendar, quit : ");
             }
-            line = sc.nextLine();
         }
     }
 }
