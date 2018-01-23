@@ -71,7 +71,7 @@ public class TaskListController {
                                 editTask(editTask, editTask.clone().setTitle(question("Input new task title:")));
                                 break;
                             case "time":
-                                Date start = null, end = null, interval;
+                                Date start, end, interval;
                                 SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
                                 SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
                                 start = timeForm.parse(question("Input new task start time[yyyy-mm-dd hh-mm]:"));
