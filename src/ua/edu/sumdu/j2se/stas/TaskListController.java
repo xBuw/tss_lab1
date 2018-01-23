@@ -62,7 +62,7 @@ public class TaskListController {
                 System.out.println("Your old task list is lost...");
         }
 
-        notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), new Date(new Date().getTime() + 1000 * 60 * 60 * 24)));
+        notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
         thread.start();
 

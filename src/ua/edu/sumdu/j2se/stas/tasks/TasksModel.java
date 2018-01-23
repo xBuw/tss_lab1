@@ -4,6 +4,16 @@ import java.util.Date;
 import java.util.*;
 
 public class TasksModel {
+
+    public static Date getLaterDate(Iterable<TaskModel> tasks){
+        Date temp = new Date();
+        for(TaskModel task : tasks){
+            if(task.getEndTime().after(temp))
+                temp = new Date(task.getEndTime().getTime());
+        }
+        return temp;
+    }
+
     public static Iterable<TaskModel> incoming(Iterable<TaskModel> tasks, Date start, Date end) {
         ArrayTaskList arr = new ArrayTaskList();
         if(start == null || end == null){
