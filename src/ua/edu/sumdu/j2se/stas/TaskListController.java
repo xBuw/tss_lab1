@@ -63,7 +63,7 @@ public class TaskListController {
         while (!line.equals("quit")) {
             try {
                 switch (line) {
-                    case "edit":
+                    case "edit":v
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task:")));
                         String subMenu = question(editTask + ". What you want change(title,time or activity)?");
                         switch (subMenu) {
@@ -71,7 +71,7 @@ public class TaskListController {
                                 editTask(editTask, editTask.clone().setTitle(question("Input new task title:")));
                                 break;
                             case "time":
-                                Date start = null, end = null, interval;
+                                Date start, end, interval;
                                 SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
                                 SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
                                 start = timeForm.parse(question("Input new task start time[yyyy-mm-dd hh-mm]:"));
