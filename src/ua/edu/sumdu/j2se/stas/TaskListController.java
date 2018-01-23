@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.stas;
 
 import ua.edu.sumdu.j2se.stas.tasks.*;
+
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,6 +87,8 @@ public class TaskListController {
                             case "activity":
                                 editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                                 break;
+                            default:
+                                System.out.println("Wrong argument");
                         }
                         break;
                     case "add":
