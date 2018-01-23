@@ -1,7 +1,6 @@
 package ua.edu.sumdu.j2se.stas;
 
 import ua.edu.sumdu.j2se.stas.tasks.*;
-
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,11 +12,6 @@ public class TaskListController {
     private static Thread thread;
     private static NotificationManager notificationManager;
     private static Scanner sc = new Scanner(System.in);
-
-
-    public static boolean isEmpty() {
-        return list.size() <= 0;
-    }
 
     public static void editTask(TaskModel oldTask, TaskModel newTask) {
         if (newTask != null) {
@@ -59,15 +53,12 @@ public class TaskListController {
             if (file.exists())
                 TaskIOModel.readText(list, file);
             else
-                System.out.println("Your old task list is lost...");
+                System.out.println("Sorry...your task list is lost...");
         }
-
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
         thread.start();
-
         line = question("Menu task manager: edit, add, remove, show, calendar, quit : ");
-
         while (!line.equals("quit")) {
             try {
                 switch (line) {
@@ -96,7 +87,6 @@ public class TaskListController {
                                 editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                                 break;
                         }
-
                         break;
                     case "add":
                         ArrayTaskList single = new ArrayTaskList();
@@ -121,9 +111,6 @@ public class TaskListController {
                         break;
                     case "quit":
                         TaskIOModel.writeText(list, file);
-                        break;
-                    default:
-                        System.out.println("unknown operation");
                         break;
                 }
             } catch (RuntimeException e) {
