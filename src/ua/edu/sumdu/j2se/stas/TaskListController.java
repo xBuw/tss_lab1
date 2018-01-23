@@ -110,15 +110,10 @@ public class TaskListController {
                     editTask(null, single.getTask(0));
                     break;
                 case "remove":
-                    if (isEmpty()) {
-                        System.out.println("empty list!");
-                        break;
-                    }
-                    question("Remove task.input index task:");
                     try {
                         editTask(list.getTask(Integer.valueOf(question("Remove task.input index task:"))), null);
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
+                    } catch (RuntimeException e) {
+                        System.out.println("Exception: "+ e.getMessage());
                     }
                     break;
                 case "show":

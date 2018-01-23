@@ -124,7 +124,9 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
     }
 
     public TaskModel getTask(int index) {
-        Node temp = null;
+        Node temp;
+        if(index<0)
+            throw new IndexOutOfBoundsException(index+" index is less then zero");
         if (first != null) {
             temp = first;
             while (temp.next != null && index > 0) {
@@ -132,9 +134,9 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
                 index--;
             }
         }else{
-            throw new NoSuchElementException("empty list");
+            throw new NoSuchElementException("list is empty");
         }
-        if (temp == null || index > 0)
+        if (index > 0)
             throw new IndexOutOfBoundsException("this index out of range");
         return temp.current;
     }
