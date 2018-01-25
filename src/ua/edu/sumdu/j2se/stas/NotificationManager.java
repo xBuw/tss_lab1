@@ -16,6 +16,7 @@ public class NotificationManager implements Runnable {
     public void add(TaskModel task) {
         Set<TaskModel> tempTaskSet;
         Date tempDate = new Date();
+        TaskListController.logger.info("Add task in notification manager");
         while (task.nextTimeAfter(tempDate) != null) {
             tempDate = new Date(task.nextTimeAfter(tempDate).getTime());
             tempTaskSet = taskList.get(tempDate);
@@ -32,6 +33,7 @@ public class NotificationManager implements Runnable {
     }
 
     public void remove(TaskModel task) {
+        TaskListController.logger.info("Remove task in notification manager");
         for (Map.Entry<Date, Set<TaskModel>> entry : taskList.entrySet()) {
             for (TaskModel loopTask : entry.getValue()) {
                 if (loopTask.equals(task)) {
@@ -50,18 +52,22 @@ public class NotificationManager implements Runnable {
                 taskList.remove(taskList.firstKey());
             }
             taskSet = taskList.get(taskList.firstKey());
+            TaskListController.logger.info("Start timer for earliest tasks:");
         } catch (NoSuchElementException e) {
+            TaskListController.logger.info("Not found tasks for notification");
             return;
         }
         try {
             TimeUnit.MILLISECONDS.sleep(interval);
+            TaskListController.logger.info("End timer for earliest tasks");
         } catch (InterruptedException e) {
-            System.out.println("interrupted " + Thread.currentThread().getName());
+            TaskListController.logger.info("Interrupted " + Thread.currentThread().getName());
         }
         StringBuilder notification = new StringBuilder("Notification: ");
         for (TaskModel task : taskSet) {
             notification.append(task.getTitle() + ", ");
         }
+        TaskListController.logger.info("Notified: "+notification);
         System.out.println(notification.substring(0, notification.length() - 2));
         taskList.remove(taskList.firstKey());
         Thread newThread = new Thread(this);
