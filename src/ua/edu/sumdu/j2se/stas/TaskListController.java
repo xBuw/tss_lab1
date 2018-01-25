@@ -63,7 +63,7 @@ public class TaskListController {
         while (!line.equals("quit")) {
             try {
                 switch (line) {
-                    case "edit":
+                    case "edit":v
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task:")));
                         String subMenu = question(editTask + ". What you want change(title,time or activity)?");
                         switch (subMenu) {
