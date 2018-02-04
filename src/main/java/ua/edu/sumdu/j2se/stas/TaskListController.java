@@ -53,6 +53,8 @@ public class TaskListController {
 
     public static void main(String[] args) {
 
+        System.out.println("Welcome to TASK MANAGER");
+
         PropertyConfigurator.configure(nameFile);
 
         File file = new File("TaskListModel");
