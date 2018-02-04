@@ -109,6 +109,7 @@ public class TaskListController {
                                 Date start, end, interval;
                                 SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
                                 SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
+
                                 start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
                                 String endString = question("Input new task end time, EMPTY for single task: ");
                                 if (endString.equals("")) {
@@ -117,7 +118,7 @@ public class TaskListController {
                                 } else {
                                     end = timeForm.parse(endString);
                                     interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
-                                    editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 26));
+                                    editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
                                     logger.info("Edit task time for regular task");
                                 }
                                 break;
@@ -130,14 +131,32 @@ public class TaskListController {
                         }
                         break;
                     case "2":
-                        ArrayTaskList single = new ArrayTaskList();
-                        TaskIOModel.read(single, new StringReader(question("Input new task. Format: (\"task name\" at [year-mm-dd hh:mm:ss.000];)" +
-                                " or " + System.lineSeparator() + ("\"task name\" from [year-mm-dd hh:mm:ss.000] to [year-mm-dd hh:mm:ss.000] every [2 day(s), 60 second(s)];)"))));
-                        editTask(null, single.getTask(0));
+                        TaskModel tempTask;
+                        SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+                        SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
+
+                        String type = question("If you want create Single task print (1), or (2) for Repeatable: ");
+                        String title = question("Input task name: ");
+
+                        Date startDate = timeForm.parse(question("Input start time. Format: year-mm-dd hh-mm: "));
+                        if ( type.equals("1") ){
+                            tempTask = new TaskModel(title, startDate);
+                        }else{
+                            Date endDate = timeForm.parse(question("Input end time. Format: year-mm-dd hh-mm: "));
+                            Date interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                            tempTask = new TaskModel(title, startDate, endDate, (int) interval.getTime() / 1000 + 60 * 60 * 27);
+                        }
+                        String active = question("Print (1) if you want active task, or (2) for inactive: ");
+                        if ( active.equals("2") ) {
+                            tempTask.setActive(false);
+                        } else {
+                            tempTask.setActive(true);
+                        }
+                            editTask(null, tempTask);
                         logger.info("Add new task");
                         break;
                     case "3":
-                        editTask(list.getTask(Integer.valueOf(question("Remove task.input index task:"))), null);
+                        editTask(list.getTask(Integer.valueOf(question("Remove task.input index task: "))), null);
                         logger.info("Remove task");
                         break;
                     case "4":
