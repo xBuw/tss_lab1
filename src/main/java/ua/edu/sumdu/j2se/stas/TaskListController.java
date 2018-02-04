@@ -136,6 +136,10 @@ public class TaskListController {
                         SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
 
                         String type = question("If you want create Single task print (1), or (2) for Repeatable: ");
+                        if(!(type.equals("1")||type.equals("2"))){
+                            System.out.println(type + " - WRONG type argument!");
+                            break;
+                        }
                         String title = question("Input task name: ");
 
                         Date startDate = timeForm.parse(question("Input start time. Format: year-mm-dd hh-mm: "));
@@ -170,6 +174,9 @@ public class TaskListController {
                         Date end = formatter.parse(question("input end date year-mm-dd: "));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
+                        break;
+                    default:
+                        System.out.println(line + " - WRONG argument!");
                         break;
                 }
             } catch (RuntimeException e) {
