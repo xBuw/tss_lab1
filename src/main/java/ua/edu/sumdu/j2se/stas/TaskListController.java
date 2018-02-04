@@ -51,9 +51,26 @@ public class TaskListController {
         return sc.nextLine();
     }
 
+    public static void printMenu(){
+        System.out.println("----------------------------------------------------------");
+        System.out.println("-------------------Menu Task Manager----------------------");
+        System.out.println("1 - edit task");
+        System.out.println("2 - add task");
+        System.out.println("3 - remove task");
+        System.out.println("4 - show tasks");
+        System.out.println("5 - make calendar");
+        System.out.println("----------------------------------------------------------");
+    }
+
+    public static String selectMenu(){
+        printMenu();
+        return question("\tInput number menu(or exit):");
+    }
+
     public static void main(String[] args) {
 
         System.out.println("Welcome to TASK MANAGER");
+        System.out.println("Print 'exit' for exit");
 
         PropertyConfigurator.configure(nameFile);
 
@@ -74,37 +91,37 @@ public class TaskListController {
         thread = new Thread(notificationManager);
         logger.info("Start thread notificationManager");
         thread.start();
-        line = question("Menu task manager: edit, add, remove, show, calendar, quit : ");
-        while (!line.equals("quit")) {
+        line = selectMenu();
+        while (!line.equals("exit")) {
             try {
                 logger.debug("Selection menu item...");
                 switch (line) {
-                    case "edit":
-                        TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task:")));
+                    case "1":
+                        TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
                         logger.info("Get task by id");
-                        String subMenu = question(editTask + ". What you want change(title,time or activity)?");
+                        String subMenu = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
                         switch (subMenu) {
-                            case "title":
-                                editTask(editTask, editTask.clone().setTitle(question("Input new task title:")));
+                            case "1":
+                                editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
                                 logger.info("Edit task title");
                                 break;
-                            case "time":
+                            case "2":
                                 Date start, end, interval;
                                 SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
                                 SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
-                                start = timeForm.parse(question("Input new task start time[yyyy-mm-dd hh-mm]:"));
-                                String endString = question("Input new task end time, empty for single task:");
+                                start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
+                                String endString = question("Input new task end time, EMPTY for single task: ");
                                 if (endString.equals("")) {
                                     editTask(editTask, editTask.clone().setTime(start));
                                     logger.info("Edit task time for single task");
                                 } else {
                                     end = timeForm.parse(endString);
-                                    interval = interForm.parse(question("Input new interval [dd-hh-mm-ss]:"));
+                                    interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
                                     editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 26));
                                     logger.info("Edit task time for regular task");
                                 }
                                 break;
-                            case "activity":
+                            case "3":
                                 logger.info("Edit task activity");
                                 editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                                 break;
@@ -112,23 +129,23 @@ public class TaskListController {
                                 logger.error("Wrong argument");
                         }
                         break;
-                    case "add":
+                    case "2":
                         ArrayTaskList single = new ArrayTaskList();
                         TaskIOModel.read(single, new StringReader(question("Input new task. Format: (\"task name\" at [year-mm-dd hh:mm:ss.000];)" +
                                 " or " + System.lineSeparator() + ("\"task name\" from [year-mm-dd hh:mm:ss.000] to [year-mm-dd hh:mm:ss.000] every [2 day(s), 60 second(s)];)"))));
                         editTask(null, single.getTask(0));
                         logger.info("Add new task");
                         break;
-                    case "remove":
+                    case "3":
                         editTask(list.getTask(Integer.valueOf(question("Remove task.input index task:"))), null);
                         logger.info("Remove task");
                         break;
-                    case "show":
+                    case "4":
                         for (int i = 0; i < list.size(); i++) {
                             System.out.println(i + ": " + list.getTask(i));
                         }
                         break;
-                    case "calendar":
+                    case "5":
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                         Date start = formatter.parse(question("input start date year-mm-dd: "));
                         Date end = formatter.parse(question("input end date year-mm-dd: "));
@@ -141,7 +158,7 @@ public class TaskListController {
             } catch (ParseException e) {
                 System.out.println(e.getMessage());
             } finally {
-                line = question("Menu task manager: edit, add, remove, show, calendar, quit : ");
+                line = selectMenu();
             }
         }
         TaskIOModel.writeText(list, file);
