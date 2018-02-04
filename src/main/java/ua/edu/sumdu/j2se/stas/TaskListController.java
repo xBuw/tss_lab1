@@ -169,9 +169,9 @@ public class TaskListController {
                         }
                         break;
                     case "5":
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        Date start = formatter.parse(question("input start date year-mm-dd: "));
-                        Date end = formatter.parse(question("input end date year-mm-dd: "));
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+                        Date start = formatter.parse(question("input start date year-mm-dd hh-mm: "));
+                        Date end = formatter.parse(question("input end date year-mm-dd hh-mm: "));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
                         break;
