@@ -121,17 +121,21 @@ public class TaskListController {
                                 Date start, end, interval;
                                 SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
                                 SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
-
+                                String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
+                                if(!(repeatable.equals("1")||repeatable.equals("2"))){
+                                    System.out.println("Error argument");
+                                    break;
+                                }
                                 start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
-                                String endString = question("Input new task end time, EMPTY for single task: ");
-                                if (endString.equals("")) {
-                                    editTask(editTask, editTask.clone().setTime(start));
-                                    logger.info("Edit task time for single task");
-                                } else {
+                                if(repeatable.equals("1")){
+                                    String endString = question("Input new task end time, Format: yyyy-mm-dd hh-mm: ");
                                     end = timeForm.parse(endString);
                                     interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
                                     editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
                                     logger.info("Edit task time for regular task");
+                                }else {
+                                    editTask(editTask, editTask.clone().setTime(start));
+                                    logger.info("Edit task time for single task");
                                 }
                                 break;
                             case "3":
