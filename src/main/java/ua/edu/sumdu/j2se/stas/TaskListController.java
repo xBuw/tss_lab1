@@ -75,17 +75,27 @@ public class TaskListController {
 
         PropertyConfigurator.configure(nameFile);
 
-        File file = new File("TaskListModel");
+        File file = null;
         String line;
-        line = question("You want load old task list, otherwise it will be deleted?[Y,n]:");
-        if (line.equals("Y") || line.equals("y") || line.equals("")) {
-            if (file.exists()) {
-                TaskIOModel.readText(list, file);
-                logger.info("Read tasks from file:" + file.getAbsolutePath());
-            } else {
-                System.out.println("Sorry...your task list is lost...");
-                logger.warn("File: " + file.getAbsolutePath() + " not found");
+        line = question("1 - load taskList from file1\n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
+        if (line.equals("1")){
+            File dir = new File("taskLists");
+            for(String i : dir.list()){
+                System.out.println(i);
             }
+            file = new File("taskLists"+File.separator+question("Print file name from list: "));
+        }else if(line.equals("2")) {
+            file = new File("TaskListModel");
+        }else if(line.equals("3")) {
+            file = new File("");
+        }else
+            System.out.println("Wrong argument!");
+        if (file.exists()) {
+            TaskIOModel.readText(list, file);
+            logger.info("Read tasks from file:" + file.getAbsolutePath());
+        } else {
+            System.out.println("Sorry...your task list is lost...");
+            logger.warn("File: " + file.getAbsolutePath() + " not found");
         }
 
         logger.info("Create notificationManager...");
