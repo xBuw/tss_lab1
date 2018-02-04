@@ -59,6 +59,7 @@ public class TaskListController {
         System.out.println("3 - remove task");
         System.out.println("4 - show tasks");
         System.out.println("5 - make calendar");
+        System.out.println("6 - save taskList in file");
         System.out.println("----------------------------------------------------------");
     }
 
@@ -86,6 +87,7 @@ public class TaskListController {
                 logger.warn("File: " + file.getAbsolutePath() + " not found");
             }
         }
+
         logger.info("Create notificationManager...");
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
@@ -174,6 +176,10 @@ public class TaskListController {
                         Date end = formatter.parse(question("input end date year-mm-dd hh-mm: "));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
+                        break;
+                    case "6":
+                        TaskIOModel.writeText(list, new File("taskLists"+File.separator+question("Input file name: ")));
+                        logger.info("Write tasks in file");
                         break;
                     default:
                         System.out.println(line + " - WRONG argument!");
