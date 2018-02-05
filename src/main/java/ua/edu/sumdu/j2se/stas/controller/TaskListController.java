@@ -129,40 +129,43 @@ public class TaskListController {
                     case "1":
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
                         logger.info("Get task by id");
-                        String subMenu = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
-                        switch (subMenu) {
-                            case "1":
-                                editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
-                                logger.info("Edit task title");
-                                break;
-                            case "2":
-                                Date start, end, interval;
-                                SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                                SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
-                                String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                                if(!(repeatable.equals("1")||repeatable.equals("2"))){
-                                    System.out.println("Error argument");
+                        String subMenu;
+                        do{
+                            subMenu = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
+                            switch (subMenu) {
+                                case "1":
+                                    editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
+                                    logger.info("Edit task title");
                                     break;
-                                }
-                                start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
-                                if(repeatable.equals("1")){
-                                    String endString = question("Input new task end time, Format: yyyy-mm-dd hh-mm: ");
-                                    end = timeForm.parse(endString);
-                                    interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
-                                    editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
-                                    logger.info("Edit task time for regular task");
-                                }else {
-                                    editTask(editTask, editTask.clone().setTime(start));
-                                    logger.info("Edit task time for single task");
-                                }
-                                break;
-                            case "3":
-                                logger.info("Edit task activity");
-                                editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
-                                break;
-                            default:
-                                logger.error("Wrong argument");
-                        }
+                                case "2":
+                                    Date start, end, interval;
+                                    SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+                                    SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
+                                    String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
+                                    if(!(repeatable.equals("1")||repeatable.equals("2"))){
+                                        System.out.println("Error argument");
+                                        break;
+                                    }
+                                    start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
+                                    if(repeatable.equals("1")){
+                                        String endString = question("Input new task end time, Format: yyyy-mm-dd hh-mm: ");
+                                        end = timeForm.parse(endString);
+                                        interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                                        editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
+                                        logger.info("Edit task time for regular task");
+                                    }else {
+                                        editTask(editTask, editTask.clone().setTime(start));
+                                        logger.info("Edit task time for single task");
+                                    }
+                                    break;
+                                case "3":
+                                    logger.info("Edit task activity");
+                                    editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
+                                    break;
+                                default:
+                                    logger.error("Wrong argument");
+                            }
+                        }while(!isValid(new int[]{1,2,3},subMenu));
                         break;
                     case "2":
                         TaskModel tempTask;
