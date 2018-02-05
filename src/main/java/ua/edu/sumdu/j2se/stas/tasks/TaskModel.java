@@ -37,7 +37,7 @@ public class TaskModel implements Cloneable, Serializable {
     }
 
     @Override
-    public TaskModel clone() {
+    public TaskModel clone() throws InternalError{
         try {
             return (TaskModel) super.clone();
         } catch (CloneNotSupportedException e) {
@@ -48,7 +48,7 @@ public class TaskModel implements Cloneable, Serializable {
     public TaskModel() {
     }
 
-    public TaskModel(String title, Date time) {
+    public TaskModel(String title, Date time) throws IllegalArgumentException{
         if (title == null || time == null) {
             throw new IllegalArgumentException("title is null or time is negative");
         }
@@ -56,7 +56,7 @@ public class TaskModel implements Cloneable, Serializable {
         this.start = new Date(time.getTime());
     }
 
-    public TaskModel(String title, Date start, Date end, int interval) {
+    public TaskModel(String title, Date start, Date end, int interval) throws IllegalArgumentException{
         if (title.equals("") || start == null || end == null || interval <= 0) {
             throw new IllegalArgumentException("title is null or time is negative");
         }
@@ -69,7 +69,7 @@ public class TaskModel implements Cloneable, Serializable {
     /**
      * Set title task
      */
-    public TaskModel setTitle(String title) {
+    public TaskModel setTitle(String title) throws IllegalArgumentException{
         if (title.equals("")) {
             throw new IllegalArgumentException("title is null");
         }
@@ -99,7 +99,7 @@ public class TaskModel implements Cloneable, Serializable {
         return this;
     }
 
-    public TaskModel setTime(Date time) {
+    public TaskModel setTime(Date time) throws IllegalArgumentException{
         if (time == null) {
             throw new IllegalArgumentException("time is negative");
         }
@@ -115,7 +115,7 @@ public class TaskModel implements Cloneable, Serializable {
      * @param end      - last call task
      * @param interval - interval with tasks
      */
-    public TaskModel setTime(Date start, Date end, int interval) {
+    public TaskModel setTime(Date start, Date end, int interval) throws IllegalArgumentException{
         if (!(title != null && start != null && end != null && interval >= 0)) {
             throw new IllegalArgumentException("title is null or time is negative");
         }
