@@ -91,6 +91,7 @@ public class TaskListController {
                 if(i==Integer.parseInt(comparable))
                     return true;
             }catch (NumberFormatException e){
+                logger.error(wrongArgument ,e);
                 return false;
             }
         return false;
@@ -234,8 +235,10 @@ public class TaskListController {
                 }
             } catch (RuntimeException e) {
                 System.out.println("Exception: " + e.getMessage());
+                logger.error("Exception: " + e);
             } catch (ParseException e) {
                 System.out.println(e.getMessage());
+                logger.error("Exception: " + e);
             } finally {
                 printMenu();
                 line = question("\tInput number menu(or exit):");
