@@ -128,10 +128,9 @@ public class TaskListController {
             logger.info("Read tasks from file:" + file.getAbsolutePath());
         } else {
             System.out.println("Sorry...your task list is lost...");
-            logger.warn("File not found");
+            logger.error("File not found");
         }
 
-        logger.info("Create notificationManager...");
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
         logger.info("Start thread notificationManager");
@@ -146,7 +145,6 @@ public class TaskListController {
                 switch (line) {
                     case "1":
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
-                        logger.info("Get task by id");
                         do{
                             System.out.println(editTask);
                             printTaskEditMenu();
@@ -154,7 +152,6 @@ public class TaskListController {
                             switch (line) {
                                 case "1":
                                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
-                                    logger.info("Edit task title");
                                     break;
                                 case "2":
                                     Date start, end, interval;
@@ -169,19 +166,17 @@ public class TaskListController {
                                         end = dateForm.parse(endString);
                                         interval = interForm.parse(question(interFormat));
                                         editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
-                                        logger.info("Edit task time for regular task");
                                     }else {
                                         editTask(editTask, editTask.clone().setTime(start));
-                                        logger.info("Edit task time for single task");
                                     }
                                     break;
                                 case "3":
-                                    logger.info("Edit task activity");
                                     editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                                     break;
                                 default:
                                     logger.error(line + wrongArgument);
                             }
+                            logger.info("Edit task");
                         }while(!isValid(new int[]{1,2,3},line));
                         break;
                     case "2":

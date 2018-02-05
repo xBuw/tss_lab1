@@ -60,7 +60,6 @@ public class NotificationManager implements Runnable {
         }
         try {
             TimeUnit.MILLISECONDS.sleep(interval);
-            TaskListController.logger.info("End timer for earliest tasks");
         } catch (InterruptedException e) {
             TaskListController.logger.info("Interrupted " + Thread.currentThread().getName());
         }
@@ -68,7 +67,7 @@ public class NotificationManager implements Runnable {
         for (TaskModel task : taskSet) {
             notification.append(task.getTitle() + ", ");
         }
-        TaskListController.logger.info("Notified: "+notification);
+        TaskListController.logger.info("\nNotified: "+notification+"\n");
         System.out.println(notification.substring(0, notification.length() - 2));
         taskList.remove(taskList.firstKey());
         Thread newThread = new Thread(this);
