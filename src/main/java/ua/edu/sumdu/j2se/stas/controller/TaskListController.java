@@ -18,6 +18,10 @@ public class TaskListController {
     private static Scanner sc = new Scanner(System.in);
     private static String nameFile = "log4j.properties";
     public static Logger logger = Logger.getLogger("logfile");
+    private static SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+    private static SimpleDateFormat timeForm = new SimpleDateFormat("dd-HH-mm-ss");
+    private static String line;
+
 
     public static void editTask(TaskModel oldTask, TaskModel newTask) {
         if (newTask != null) {
@@ -64,11 +68,6 @@ public class TaskListController {
         System.out.println("----------------------------------------------------------");
     }
 
-    public static String selectMenu(){
-        printMenu();
-        return question("\tInput number menu(or exit):");
-    }
-
     public static boolean isValid(int[] correctValues, String comparable){
         if(comparable==null)
             return false;
@@ -82,16 +81,16 @@ public class TaskListController {
         return false;
     }
 
-    public static void main(String[] args) {
-
+    public static void printWelcomeMessage(){
         System.out.println("Welcome to TASK MANAGER");
         System.out.println("Print 'exit' for exit");
+    }
 
+    public static void main(String[] args) {
+
+        printWelcomeMessage();
         PropertyConfigurator.configure(nameFile);
-
         File file = null;
-        String line;
-
         do{
             line = question("1 - load taskList from file1\n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
             if (line.equals("1")){
@@ -121,7 +120,10 @@ public class TaskListController {
         thread = new Thread(notificationManager);
         logger.info("Start thread notificationManager");
         thread.start();
-        line = selectMenu();
+
+        printMenu();
+        line = question("\tInput number menu(or exit):");
+
         while (!line.equals("exit")) {
             try {
                 logger.debug("Selection menu item...");
@@ -129,28 +131,25 @@ public class TaskListController {
                     case "1":
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
                         logger.info("Get task by id");
-                        String subMenu;
                         do{
-                            subMenu = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
-                            switch (subMenu) {
+                            line = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
+                            switch (line) {
                                 case "1":
                                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
                                     logger.info("Edit task title");
                                     break;
                                 case "2":
                                     Date start, end, interval;
-                                    SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                                    SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
                                     String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
                                     if(!(repeatable.equals("1")||repeatable.equals("2"))){
                                         System.out.println("Error argument");
                                         break;
                                     }
-                                    start = timeForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
+                                    start = dateForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
                                     if(repeatable.equals("1")){
                                         String endString = question("Input new task end time, Format: yyyy-mm-dd hh-mm: ");
-                                        end = timeForm.parse(endString);
-                                        interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                                        end = dateForm.parse(endString);
+                                        interval = timeForm.parse(question("Input new interval dd-hh-mm-ss: "));
                                         editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
                                         logger.info("Edit task time for regular task");
                                     }else {
@@ -165,13 +164,10 @@ public class TaskListController {
                                 default:
                                     logger.error("Wrong argument");
                             }
-                        }while(!isValid(new int[]{1,2,3},subMenu));
+                        }while(!isValid(new int[]{1,2,3},line));
                         break;
                     case "2":
                         TaskModel tempTask;
-                        SimpleDateFormat timeForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                        SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
-
                         String type = question("If you want create Single task print (1), or (2) for Repeatable: ");
                         if(!(type.equals("1")||type.equals("2"))){
                             System.out.println(type + " - WRONG type argument!");
@@ -179,12 +175,12 @@ public class TaskListController {
                         }
                         String title = question("Input task name: ");
 
-                        Date startDate = timeForm.parse(question("Input start time. Format: year-mm-dd hh-mm: "));
+                        Date startDate = dateForm.parse(question("Input start time. Format: year-mm-dd hh-mm: "));
                         if ( type.equals("1") ){
                             tempTask = new TaskModel(title, startDate);
                         }else{
-                            Date endDate = timeForm.parse(question("Input end time. Format: year-mm-dd hh-mm: "));
-                            Date interval = interForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                            Date endDate = dateForm.parse(question("Input end time. Format: year-mm-dd hh-mm: "));
+                            Date interval = timeForm.parse(question("Input new interval dd-hh-mm-ss: "));
                             tempTask = new TaskModel(title, startDate, endDate, (int) interval.getTime() / 1000 + 60 * 60 * 27);
                         }
                         String active = question("Print (1) if you want active task, or (2) for inactive: ");
@@ -206,9 +202,8 @@ public class TaskListController {
                         }
                         break;
                     case "5":
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-                        Date start = formatter.parse(question("input start date year-mm-dd hh-mm: "));
-                        Date end = formatter.parse(question("input end date year-mm-dd hh-mm: "));
+                        Date start = dateForm.parse(question("input start date year-mm-dd hh-mm: "));
+                        Date end = dateForm.parse(question("input end date year-mm-dd hh-mm: "));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
                         break;
@@ -225,7 +220,8 @@ public class TaskListController {
             } catch (ParseException e) {
                 System.out.println(e.getMessage());
             } finally {
-                line = selectMenu();
+                printMenu();
+                line = question("\tInput number menu(or exit):");
             }
         }
         TaskIOModel.writeText(list, file);
