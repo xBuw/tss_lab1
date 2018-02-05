@@ -3,10 +3,10 @@
 ## Run this:
 
 ```
- mvn clean dependency:copy-dependencies package
+mvn clean compile assembly:single
  ```
 ## And this:
 
 ```
- java -jar target/TaskList-1.0-SNAPSHOT.jar
+ java -jar target/TaskList-1.0-SNAPSHOT-jar-with-dependencies.jar
  ```
