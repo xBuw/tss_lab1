@@ -53,6 +53,10 @@ public class ArrayTaskList extends TaskListModel implements Cloneable, Serializa
         }
     }
 
+    /**
+     * add new task in list
+     * @param task
+     */
     public void add(TaskModel task) {
         if (countTask == maxCountTask) {
             maxCountTask *= 10;
@@ -65,6 +69,11 @@ public class ArrayTaskList extends TaskListModel implements Cloneable, Serializa
         countTask++;
     }
 
+    /**
+     * remove current task
+     * @param task
+     * @return
+     */
     public boolean remove(TaskModel task) {
         for (int i = 0; i < countTask; i++)
             if (task.equals(arrTask[i])) {
@@ -78,6 +87,11 @@ public class ArrayTaskList extends TaskListModel implements Cloneable, Serializa
         return false;
     }
 
+    /**
+     * get task from index
+     * @param index
+     * @return
+     */
     public TaskModel getTask(int index) {
         if (index >= 0 && index < this.size()) {
             return (arrTask[index]);

@@ -10,10 +10,18 @@ public class NotificationManager implements Runnable {
 
     private TreeMap<Date, Set<TaskModel>> taskList;
 
+    /**
+     * Load current tasks to notified list
+     * @param list
+     */
     public NotificationManager(SortedMap<Date, Set<TaskModel>> list) {
         this.taskList = (TreeMap<Date, Set<TaskModel>>) list;
     }
 
+    /**
+     * If new task added or edited, reload add it to notified list
+     * @param task
+     */
     public void add(TaskModel task) {
         Set<TaskModel> tempTaskSet;
         Date tempDate = new Date();
@@ -33,6 +41,11 @@ public class NotificationManager implements Runnable {
         }
     }
 
+
+    /**
+     * Remove task from notifies list
+     * @param task
+     */
     public void remove(TaskModel task) {
         TaskListController.logger.info("Remove task in notification manager");
         for (Map.Entry<Date, Set<TaskModel>> entry : taskList.entrySet()) {
@@ -44,6 +57,9 @@ public class NotificationManager implements Runnable {
         }
     }
 
+    /**
+     * Find earliest task, and make timer for it.
+     */
     @Override
     public void run() {
         long interval;

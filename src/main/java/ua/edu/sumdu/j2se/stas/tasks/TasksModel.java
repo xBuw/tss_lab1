@@ -5,6 +5,11 @@ import java.util.*;
 
 public class TasksModel {
 
+    /**
+     * Find later date from tasks
+     * @param tasks
+     * @return
+     */
     public static Date getLaterDate(Iterable<TaskModel> tasks){
         Date temp = new Date();
         for(TaskModel task : tasks){
@@ -14,6 +19,14 @@ public class TasksModel {
         return temp;
     }
 
+
+    /**
+     * Filter tasks from start to end
+     * @param tasks
+     * @param start
+     * @param end
+     * @return
+     */
     public static Iterable<TaskModel> incoming(Iterable<TaskModel> tasks, Date start, Date end) {
         ArrayTaskList arr = new ArrayTaskList();
         if(start == null || end == null){
@@ -26,7 +39,15 @@ public class TasksModel {
         }
         return arr;
     }
-    
+
+
+    /**
+     * Make calendar from start date to end date
+     * @param tasks
+     * @param start
+     * @param end
+     * @return
+     */
     public static SortedMap<Date, Set<TaskModel>> calendar(Iterable<TaskModel> tasks, Date start, Date end) {
         ArrayTaskList incoming = (ArrayTaskList)incoming(tasks, start,end);
         SortedMap<Date, Set<TaskModel>> map = new TreeMap<Date, Set<TaskModel>>();

@@ -86,6 +86,10 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
         }
     }
 
+    /**
+     * add new task in list
+     * @param task
+     */
     public void add(TaskModel task) {
         if (first == null)
             first = new Node(task);
@@ -98,6 +102,11 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
         countTask++;
     }
 
+    /**
+     * remove current task from list
+     * @param task
+     * @return
+     */
     public boolean remove(TaskModel task) {
         if (first != null) {
             if (task.equals(first.current)) {
@@ -123,6 +132,11 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
         return false;
     }
 
+    /**
+     * get task with current index
+     * @param index
+     * @return
+     */
     public TaskModel getTask(int index) {
         Node temp;
         if(index<0)

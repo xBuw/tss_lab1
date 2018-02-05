@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 
 public class TaskIOModel {
 
+    /**
+     * write tasks list to output stream
+     * @param tasks
+     * @param out
+     */
     public static void write(TaskListModel tasks, OutputStream out) {
         try {
             new ObjectOutputStream(out).writeObject(tasks);
@@ -15,6 +20,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * read tasks list from input stream
+     * @param tasks
+     * @param in
+     */
     public static void read(TaskListModel tasks, InputStream in) {
         try {
             ObjectInputStream ois = new ObjectInputStream(in);
@@ -29,6 +39,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * write task list in file in binary format
+     * @param tasks
+     * @param file
+     */
     public static void writeBinary(TaskListModel tasks, File file) {
         FileOutputStream fout = null;
         ObjectOutputStream oos = null;
@@ -56,6 +71,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * read task list from file in binary format
+     * @param tasks
+     * @param file
+     */
     public static void readBinary(TaskListModel tasks, File file) {
         FileInputStream fin = null;
         ObjectInputStream ois = null;
@@ -88,6 +108,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * write task list in Writer in string format
+     * @param tasks
+     * @param out
+     */
     public static void write(TaskListModel tasks, Writer out) {
         try {
             boolean flag = false;
@@ -104,6 +129,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * read task list from Reader in string format
+     * @param tasks
+     * @param in
+     */
     public static void read(TaskListModel tasks, Reader in) {
         try {
             BufferedReader fr = new BufferedReader(in);
@@ -147,6 +177,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * write task list in file in string format
+     * @param tasks
+     * @param file
+     */
     public static void writeText(TaskListModel tasks, File file) {
         FileWriter fw = null;
         try {
@@ -165,6 +200,11 @@ public class TaskIOModel {
         }
     }
 
+    /**
+     * read task list from file in string format
+     * @param tasks
+     * @param file
+     */
     public static void readText(TaskListModel tasks, File file) {
         try {
             BufferedReader fr = new BufferedReader(new FileReader(file));

@@ -26,7 +26,12 @@ public class TaskListController {
     private static String wrongArgument = "Wrong argument";
 
 
-
+    /**
+     * Remove old task and add new task.
+     * If one of them empty, only add task or only remove task.
+     * @param oldTask
+     * @param newTask
+     */
     public static void editTask(TaskModel oldTask, TaskModel newTask) {
         if (newTask != null) {
             notificationManager.add(newTask);
@@ -42,6 +47,10 @@ public class TaskListController {
         logger.info("Restart thread for next notification");
     }
 
+    /**
+     * Print calendar on CLI
+     * @param calendar
+     */
     public static void printCalendar(SortedMap<Date, Set<TaskModel>> calendar) {
         for (SortedMap.Entry<Date, Set<TaskModel>> entry : calendar.entrySet()) {
             System.out.print(entry.getKey() + ":");
@@ -55,11 +64,21 @@ public class TaskListController {
         }
     }
 
+
+    /**
+     * Print question in CLI, and return answer.
+     * @param string
+     * @return
+     */
     public static String question(String string) {
         System.out.print(string);
         return sc.nextLine();
     }
 
+
+    /**
+     * Print main menu
+     */
     public static void printMenu(){
         System.out.println("----------------------------------------------------------");
         System.out.println("-------------------Menu Task Manager----------------------");
@@ -72,6 +91,10 @@ public class TaskListController {
         System.out.println("----------------------------------------------------------");
     }
 
+
+    /**
+     * Print task edit menu
+     */
     public static void printTaskEditMenu(){
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------Edit Task Menu Manager--------------------");
@@ -83,6 +106,13 @@ public class TaskListController {
 
     }
 
+
+    /**
+     * Check if (a >= comparable >= b)
+     * @param a
+     * @param b
+     * @param comparable
+     */
     public static boolean isValid(int a, int b, String comparable){
         if(comparable==null)
             return false;
@@ -97,11 +127,19 @@ public class TaskListController {
         return false;
     }
 
+
+    /**
+     * Print welcome messages in CLI
+     */
     public static void printWelcomeMessage(){
         System.out.println("Welcome to TASK MANAGER");
         System.out.println("Print 'exit' for exit");
     }
 
+
+    /**
+     * Load tasksList from files, or create new empty list.
+     */
     public static void getTaskListFromFile(){
         File file = null;
         do{
@@ -134,6 +172,9 @@ public class TaskListController {
         }
     }
 
+    /**
+     * Start notificationManager and generate starting calendar for notify
+     */
     public static void startNotificationManager(){
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
@@ -148,6 +189,7 @@ public class TaskListController {
         PropertyConfigurator.configure(nameFile);
         getTaskListFromFile();
         printMenu();
+        startNotificationManager();
         line = question("\tInput number menu(or exit):");
 
         while (!line.equals("exit")) {

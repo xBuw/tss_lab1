@@ -45,9 +45,19 @@ public class TaskModel implements Cloneable, Serializable {
         }
     }
 
+
+    /**
+     * Empty constructor
+     */
     public TaskModel() {
     }
 
+    /**
+     * constructor for single task
+     * @param title
+     * @param time
+     * @throws IllegalArgumentException
+     */
     public TaskModel(String title, Date time) throws IllegalArgumentException{
         if (title == null || time == null) {
             throw new IllegalArgumentException("title is null or time is negative");
@@ -56,6 +66,14 @@ public class TaskModel implements Cloneable, Serializable {
         this.start = new Date(time.getTime());
     }
 
+    /**
+     * constructor for repeatable task
+     * @param title
+     * @param start
+     * @param end
+     * @param interval
+     * @throws IllegalArgumentException
+     */
     public TaskModel(String title, Date start, Date end, int interval) throws IllegalArgumentException{
         if (title.equals("") || start == null || end == null || interval <= 0) {
             throw new IllegalArgumentException("title is null or time is negative");
@@ -99,6 +117,12 @@ public class TaskModel implements Cloneable, Serializable {
         return this;
     }
 
+    /**
+     * Set time in current task
+     * @param time
+     * @return
+     * @throws IllegalArgumentException
+     */
     public TaskModel setTime(Date time) throws IllegalArgumentException{
         if (time == null) {
             throw new IllegalArgumentException("time is negative");
@@ -203,6 +227,11 @@ public class TaskModel implements Cloneable, Serializable {
         }
     }
 
+
+    /**
+     * @param time
+     * @return next time after some date
+     */
     public Date nextTimeAfter(Date time) {
         if (!isActive()) {
             return null;
