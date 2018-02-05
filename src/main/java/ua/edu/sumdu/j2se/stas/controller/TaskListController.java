@@ -83,11 +83,11 @@ public class TaskListController {
 
     }
 
-    public static boolean isValid(int[] correctValues, String comparable){
+    public static boolean isValid(int a, int b, String comparable){
         if(comparable==null)
             return false;
             try{
-            for(int i : correctValues)
+            for(int i = a ; i < b ; i++)
                 if(i==Integer.parseInt(comparable))
                     return true;
             }catch (NumberFormatException e){
@@ -102,26 +102,28 @@ public class TaskListController {
         System.out.println("Print 'exit' for exit");
     }
 
-    public static void main(String[] args) {
-
-        printWelcomeMessage();
-        PropertyConfigurator.configure(nameFile);
+    public static void getTaskListFromFile(){
         File file = null;
         do{
             line = question("1 - load taskList from file1\n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
             if (line.equals("1")){
                 File dir = new File("taskLists");
-                for(String i : dir.list()){
-                    System.out.println(i);
+                String arr[] = dir.list();
+                for(int i = 0 ; i < arr.length ; i++){
+                    System.out.println(i+" - "+arr[i]);
                 }
-                file = new File("taskLists"+File.separator+question("Print file name from list: "));
+                String index;
+                do{
+                    index = question("Print file index: ");
+                }while(!isValid(0, arr.length, index));
+                file = new File("taskLists"+File.separator+arr[Integer.parseInt(index)]);
             }else if(line.equals("2")) {
-                file = new File("TaskListModel");
+                file = new File("taskLists"+File.separator+"TaskListModel");
             }else if(line.equals("3")) {
                 file = new File("");
             }else
                 System.out.println(line + wrongArgument);
-        }while(!isValid(new int[]{1,2,3},line));
+        }while(!isValid(1, 3,line));
 
         if (file.exists()) {
             TaskIOModel.readText(list, file);
@@ -130,12 +132,21 @@ public class TaskListController {
             System.out.println("Sorry...your task list is lost...");
             logger.error("File not found");
         }
+    }
 
+    public static void startNotificationManager(){
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
         logger.info("Start thread notificationManager");
         thread.start();
+    }
 
+
+    public static void main(String[] args) {
+
+        printWelcomeMessage();
+        PropertyConfigurator.configure(nameFile);
+        getTaskListFromFile();
         printMenu();
         line = question("\tInput number menu(or exit):");
 
@@ -177,7 +188,7 @@ public class TaskListController {
                                     logger.error(line + wrongArgument);
                             }
                             logger.info("Edit task");
-                        }while(!isValid(new int[]{1,2,3},line));
+                        }while(!isValid(1, 3,line));
                         break;
                     case "2":
                         TaskModel tempTask;
@@ -239,7 +250,7 @@ public class TaskListController {
                 line = question("\tInput number menu(or exit):");
             }
         }
-        TaskIOModel.writeText(list, file);
+        TaskIOModel.writeText(list, new File("taskLists"+File.separator+"TaskListModel"));
         logger.info("Write tasks in file");
     }
 }
