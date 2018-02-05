@@ -1,7 +1,8 @@
-package ua.edu.sumdu.j2se.stas;
+package ua.edu.sumdu.j2se.stas.controller;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import ua.edu.sumdu.j2se.stas.NotificationManager;
 import ua.edu.sumdu.j2se.stas.tasks.*;
 
 import java.io.*;
@@ -90,12 +91,12 @@ public class TaskListController {
             file = new File("");
         }else
             System.out.println("Wrong argument!");
-        if (file.exists()) {
+        if (file!=null && file.exists()) {
             TaskIOModel.readText(list, file);
             logger.info("Read tasks from file:" + file.getAbsolutePath());
         } else {
             System.out.println("Sorry...your task list is lost...");
-            logger.warn("File: " + file.getAbsolutePath() + " not found");
+            logger.warn("File not found");
         }
 
         logger.info("Create notificationManager...");

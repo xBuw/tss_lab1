@@ -18,7 +18,7 @@
         <configuration>
         <archive>
           <manifest>
-            <mainClass>ua.edu.sumdu.j2se.stas.TaskListController</mainClass>
+            <mainClass>ua.edu.sumdu.j2se.stas.controller.TaskListController</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
