@@ -72,6 +72,17 @@ public class TaskListController {
         System.out.println("----------------------------------------------------------");
     }
 
+    public static void printTaskEditMenu(){
+        System.out.println("----------------------------------------------------------");
+        System.out.println("----------------Edit Task Menu Manager--------------------");
+        System.out.println("1 - title");
+        System.out.println("2 - time");
+        System.out.println("3 - activity");
+        System.out.println("----------------------------------------------------------");
+
+
+    }
+
     public static boolean isValid(int[] correctValues, String comparable){
         if(comparable==null)
             return false;
@@ -136,7 +147,9 @@ public class TaskListController {
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
                         logger.info("Get task by id");
                         do{
-                            line = question(editTask + "\n What you want change: title(1),time(2) or activity(3)? \nPrint number: ");
+                            System.out.println(editTask);
+                            printTaskEditMenu();
+                            line = question("What you want change? Print number: ");
                             switch (line) {
                                 case "1":
                                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
@@ -172,7 +185,7 @@ public class TaskListController {
                         break;
                     case "2":
                         TaskModel tempTask;
-                        String type = question("If you want create Single task print (1), or (2) for Repeatable: ");
+                        String type = question("Print (1) if you want Repeatable task, or (2) for Single");
                         if(!(type.equals("1")||type.equals("2"))){
                             System.out.println(type + " - WRONG type argument!");
                             break;
@@ -180,7 +193,7 @@ public class TaskListController {
                         String title = question("Input task name: ");
 
                         Date startDate = dateForm.parse(question(dateFormat));
-                        if ( type.equals("1") ){
+                        if ( type.equals("2") ){
                             tempTask = new TaskModel(title, startDate);
                         }else{
                             Date endDate = dateForm.parse(question(dateFormat));
