@@ -19,8 +19,12 @@ public class TaskListController {
     private static String nameFile = "log4j.properties";
     public static Logger logger = Logger.getLogger("logfile");
     private static SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-    private static SimpleDateFormat timeForm = new SimpleDateFormat("dd-HH-mm-ss");
+    private static SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
     private static String line;
+    private static String dateFormat = "Input new task start time. Format: yyyy-mm-dd hh-mm: ";
+    private static String interFormat = "Input new interval dd-hh-mm-ss: ";
+    private static String wrongArgument = "Wrong argument";
+
 
 
     public static void editTask(TaskModel oldTask, TaskModel newTask) {
@@ -104,7 +108,7 @@ public class TaskListController {
             }else if(line.equals("3")) {
                 file = new File("");
             }else
-                System.out.println("Wrong argument!");
+                System.out.println(line + wrongArgument);
         }while(!isValid(new int[]{1,2,3},line));
 
         if (file.exists()) {
@@ -145,11 +149,11 @@ public class TaskListController {
                                         System.out.println("Error argument");
                                         break;
                                     }
-                                    start = dateForm.parse(question("Input new task start time. Format: yyyy-mm-dd hh-mm: "));
+                                    start = dateForm.parse(question(dateFormat));
                                     if(repeatable.equals("1")){
-                                        String endString = question("Input new task end time, Format: yyyy-mm-dd hh-mm: ");
+                                        String endString = question(dateFormat);
                                         end = dateForm.parse(endString);
-                                        interval = timeForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                                        interval = interForm.parse(question(interFormat));
                                         editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
                                         logger.info("Edit task time for regular task");
                                     }else {
@@ -162,7 +166,7 @@ public class TaskListController {
                                     editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                                     break;
                                 default:
-                                    logger.error("Wrong argument");
+                                    logger.error(line + wrongArgument);
                             }
                         }while(!isValid(new int[]{1,2,3},line));
                         break;
@@ -175,12 +179,12 @@ public class TaskListController {
                         }
                         String title = question("Input task name: ");
 
-                        Date startDate = dateForm.parse(question("Input start time. Format: year-mm-dd hh-mm: "));
+                        Date startDate = dateForm.parse(question(dateFormat));
                         if ( type.equals("1") ){
                             tempTask = new TaskModel(title, startDate);
                         }else{
-                            Date endDate = dateForm.parse(question("Input end time. Format: year-mm-dd hh-mm: "));
-                            Date interval = timeForm.parse(question("Input new interval dd-hh-mm-ss: "));
+                            Date endDate = dateForm.parse(question(dateFormat));
+                            Date interval = interForm.parse(question(interFormat));
                             tempTask = new TaskModel(title, startDate, endDate, (int) interval.getTime() / 1000 + 60 * 60 * 27);
                         }
                         String active = question("Print (1) if you want active task, or (2) for inactive: ");
@@ -202,8 +206,8 @@ public class TaskListController {
                         }
                         break;
                     case "5":
-                        Date start = dateForm.parse(question("input start date year-mm-dd hh-mm: "));
-                        Date end = dateForm.parse(question("input end date year-mm-dd hh-mm: "));
+                        Date start = dateForm.parse(question(dateFormat));
+                        Date end = dateForm.parse(question(dateFormat));
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
                         break;
@@ -212,7 +216,7 @@ public class TaskListController {
                         logger.info("Write tasks in file");
                         break;
                     default:
-                        System.out.println(line + " - WRONG argument!");
+                        System.out.println(line + wrongArgument);
                         break;
                 }
             } catch (RuntimeException e) {
