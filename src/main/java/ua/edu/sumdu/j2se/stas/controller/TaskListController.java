@@ -48,6 +48,7 @@ public class TaskListController {
 
     /**
      * Print calendar on CLI
+     *
      * @param calendar
      */
     public static void printCalendar(SortedMap<Date, Set<TaskModel>> calendar) {
@@ -66,6 +67,7 @@ public class TaskListController {
 
     /**
      * Print question in CLI, and return answer.
+     *
      * @param string question string
      * @return answer string
      */
@@ -78,7 +80,7 @@ public class TaskListController {
     /**
      * Print main menu
      */
-    public static void printMenu(){
+    public static void printMenu() {
         System.out.println("----------------------------------------------------------");
         System.out.println("-------------------Menu Task Manager----------------------");
         System.out.println("1 - edit task");
@@ -94,7 +96,7 @@ public class TaskListController {
     /**
      * Print task edit menu
      */
-    public static void printTaskEditMenu(){
+    public static void printTaskEditMenu() {
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------Edit Task Menu Manager--------------------");
         System.out.println("1 - title");
@@ -108,22 +110,23 @@ public class TaskListController {
 
     /**
      * Check if (a >= comparable >= b)
+     *
      * @param a
      * @param b
      * @param comparable
      * @return True if comparable number is less then b and more  then a. Else False
      */
-    public static boolean isValid(int a, int b, String comparable){
-        if(comparable==null)
+    public static boolean isValid(int a, int b, String comparable) {
+        if (comparable == null)
             return false;
-            try{
-            for(int i = a ; i < b ; i++)
-                if(i==Integer.parseInt(comparable))
+        try {
+            for (int i = a; i < b; i++)
+                if (i == Integer.parseInt(comparable))
                     return true;
-            }catch (NumberFormatException e){
-                logger.error(wrongArgument ,e);
-                return false;
-            }
+        } catch (NumberFormatException e) {
+            logger.error(wrongArgument, e);
+            return false;
+        }
         return false;
     }
 
@@ -131,7 +134,7 @@ public class TaskListController {
     /**
      * Print welcome messages in CLI
      */
-    public static void printWelcomeMessage(){
+    public static void printWelcomeMessage() {
         System.out.println("Welcome to TASK MANAGER");
         System.out.println("Print 'exit' for exit");
     }
@@ -140,28 +143,28 @@ public class TaskListController {
     /**
      * Load tasksList from files, or create new empty list.
      */
-    public static void getTaskListFromFile(){
+    public static void getTaskListFromFile() {
         File file = null;
-        do{
+        do {
             line = question("1 - load taskList from dir taskLists/... \n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
-            if (line.equals("1")){
+            if (line.equals("1")) {
                 File dir = new File("taskLists");
                 String arr[] = dir.list();
-                for(int i = 0 ; i < arr.length ; i++){
-                    System.out.println(i+" - "+arr[i]);
+                for (int i = 0; i < arr.length; i++) {
+                    System.out.println(i + " - " + arr[i]);
                 }
                 String index;
-                do{
+                do {
                     index = question("Print file index: ");
-                }while(!isValid(0, arr.length, index));
-                file = new File("taskLists"+File.separator+arr[Integer.parseInt(index)]);
-            }else if(line.equals("2")) {
-                file = new File("taskLists"+File.separator+"TaskListModel");
-            }else if(line.equals("3")) {
+                } while (!isValid(0, arr.length, index));
+                file = new File("taskLists" + File.separator + arr[Integer.parseInt(index)]);
+            } else if (line.equals("2")) {
+                file = new File("taskLists" + File.separator + "TaskListModel");
+            } else if (line.equals("3")) {
                 file = new File("");
-            }else
+            } else
                 System.out.println(line + wrongArgument);
-        }while(!isValid(1, 3,line));
+        } while (!isValid(1, 3, line));
 
         if (file.exists()) {
             TaskIOModel.readText(list, file);
@@ -175,11 +178,83 @@ public class TaskListController {
     /**
      * Start notificationManager and generate starting calendar for notify
      */
-    public static void startNotificationManager(){
+    public static void startNotificationManager() {
         notificationManager = new NotificationManager(TasksModel.calendar(list, new Date(), TasksModel.getLaterDate(list)));
         thread = new Thread(notificationManager);
         logger.info("Start thread notificationManager");
         thread.start();
+    }
+
+    /**
+     * print all existing tasks
+     */
+    public static void printALlTasks() {
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(i + ": " + list.getTask(i));
+        }
+    }
+
+    public static void addNewTask() {
+        printALlTasks();
+        TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
+        do {
+            System.out.println(editTask);
+            printTaskEditMenu();
+            line = question("What you want change? Print number: ");
+            switch (line) {
+                case "1":
+                    editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
+                    break;
+                case "2":
+                    Date start, end;
+                    String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
+                    if (!(repeatable.equals("1") || repeatable.equals("2"))) {
+                        System.out.println("Error argument");
+                        break;
+                    }
+                    start = dateForm.parse(question(dateFormat));
+                    if (repeatable.equals("1")) {
+                        String endString = question(dateFormat);
+                        end = dateForm.parse(endString);
+                        editTask(editTask, editTask.clone().setTime(start, end, Integer.parseInt(question(interFormat)) * 60));
+                    } else {
+                        editTask(editTask, editTask.clone().setTime(start));
+                    }
+                    break;
+                case "3":
+                    editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
+                    break;
+                default:
+                    logger.error(line + wrongArgument);
+            }
+            logger.info("Edit task");
+        } while (!isValid(1, 3, line));
+    }
+
+    public static void editTaskMenu() {
+        TaskModel tempTask;
+        String type = question("Print (1) if you want Repeatable task, or (2) for Single");
+        if (!(type.equals("1") || type.equals("2"))) {
+            System.out.println(type + " - WRONG type argument!");
+            break;
+        }
+        String title = question("Input task name: ");
+
+        Date startDate = dateForm.parse(question(dateFormat));
+        if (type.equals("2")) {
+            tempTask = new TaskModel(title, startDate);
+        } else {
+            Date endDate = dateForm.parse(question(dateFormat));
+            tempTask = new TaskModel(title, startDate, endDate, Integer.parseInt(question(interFormat)) * 60);
+        }
+        String active = question("Print (1) if you want active task, or (2) for inactive: ");
+        if (active.equals("2")) {
+            tempTask.setActive(false);
+        } else {
+            tempTask.setActive(true);
+        }
+        editTask(null, tempTask);
+        logger.info("Add new task");
     }
 
 
@@ -197,76 +272,17 @@ public class TaskListController {
                 logger.debug("Selection menu item...");
                 switch (line) {
                     case "1":
-                        for (int i = 0; i < list.size(); i++) {
-                            System.out.println(i + ": " + list.getTask(i));
-                        }
-                        TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
-                        do{
-                            System.out.println(editTask);
-                            printTaskEditMenu();
-                            line = question("What you want change? Print number: ");
-                            switch (line) {
-                                case "1":
-                                    editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
-                                    break;
-                                case "2":
-                                    Date start, end;
-                                    String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                                    if(!(repeatable.equals("1")||repeatable.equals("2"))){
-                                        System.out.println("Error argument");
-                                        break;
-                                    }
-                                    start = dateForm.parse(question(dateFormat));
-                                    if(repeatable.equals("1")){
-                                        String endString = question(dateFormat);
-                                        end = dateForm.parse(endString);
-                                        editTask(editTask, editTask.clone().setTime(start, end, Integer.parseInt(question(interFormat))*60));
-                                    }else {
-                                        editTask(editTask, editTask.clone().setTime(start));
-                                    }
-                                    break;
-                                case "3":
-                                    editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
-                                    break;
-                                default:
-                                    logger.error(line + wrongArgument);
-                            }
-                            logger.info("Edit task");
-                        }while(!isValid(1, 3,line));
+                        addNewTask();
                         break;
                     case "2":
-                        TaskModel tempTask;
-                        String type = question("Print (1) if you want Repeatable task, or (2) for Single");
-                        if(!(type.equals("1")||type.equals("2"))){
-                            System.out.println(type + " - WRONG type argument!");
-                            break;
-                        }
-                        String title = question("Input task name: ");
-
-                        Date startDate = dateForm.parse(question(dateFormat));
-                        if ( type.equals("2") ){
-                            tempTask = new TaskModel(title, startDate);
-                        }else{
-                            Date endDate = dateForm.parse(question(dateFormat));
-                            tempTask = new TaskModel(title, startDate, endDate, Integer.parseInt(question(interFormat))*60);
-                        }
-                        String active = question("Print (1) if you want active task, or (2) for inactive: ");
-                        if ( active.equals("2") ) {
-                            tempTask.setActive(false);
-                        } else {
-                            tempTask.setActive(true);
-                        }
-                            editTask(null, tempTask);
-                        logger.info("Add new task");
+                        editTaskMenu();
                         break;
                     case "3":
                         editTask(list.getTask(Integer.valueOf(question("Remove task.input index task: "))), null);
                         logger.info("Remove task");
                         break;
                     case "4":
-                        for (int i = 0; i < list.size(); i++) {
-                            System.out.println(i + ": " + list.getTask(i));
-                        }
+                        printALlTasks();
                         break;
                     case "5":
                         Date start = dateForm.parse(question(dateFormat));
@@ -275,7 +291,7 @@ public class TaskListController {
                         printCalendar(calendar);
                         break;
                     case "6":
-                        TaskIOModel.writeText(list, new File("taskLists"+File.separator+question("Input file name: ")));
+                        TaskIOModel.writeText(list, new File("taskLists" + File.separator + question("Input file name: ")));
                         logger.info("Write tasks in file");
                         break;
                     default:
@@ -293,7 +309,7 @@ public class TaskListController {
                 line = question("\tInput number menu(or exit):");
             }
         }
-        TaskIOModel.writeText(list, new File("taskLists"+File.separator+"TaskListModel"));
+        TaskIOModel.writeText(list, new File("taskLists" + File.separator + "TaskListModel"));
         logger.info("Write tasks in file");
     }
 }
