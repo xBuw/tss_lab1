@@ -18,12 +18,12 @@ public class TaskListController {
     private static Scanner sc = new Scanner(System.in);
     private static String nameFile = "log4j.properties";
     public static Logger logger = Logger.getLogger("logfile");
-    private static SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-    private static SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
+    private static final SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+    private static final SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
+    private static final String dateFormat = "Input new task start time. Format: yyyy-mm-dd hh-mm: ";
+    private static final String interFormat = "Input new interval dd-hh-mm-ss: ";
+    private static final String wrongArgument = "Wrong argument";
     private static String line;
-    private static String dateFormat = "Input new task start time. Format: yyyy-mm-dd hh-mm: ";
-    private static String interFormat = "Input new interval dd-hh-mm-ss: ";
-    private static String wrongArgument = "Wrong argument";
 
 
     /**
