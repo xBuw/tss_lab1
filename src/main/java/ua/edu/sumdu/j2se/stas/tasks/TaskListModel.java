@@ -54,7 +54,7 @@ public abstract class TaskListModel implements Iterable<TaskModel>, Serializable
 
     /**
      * return size list
-     * @return
+     * @return count task from task list
      */
     public int size() {
         return countTask;

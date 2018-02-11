@@ -105,7 +105,7 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
     /**
      * remove current task from list
      * @param task
-     * @return
+     * @return True if task removed, else False
      */
     public boolean remove(TaskModel task) {
         if (first != null) {
@@ -134,8 +134,8 @@ public class LinkedTaskList extends TaskListModel implements Cloneable, Serializ
 
     /**
      * get task with current index
-     * @param index
-     * @return
+     * @param index tasks
+     * @return task from index
      */
     public TaskModel getTask(int index) {
         Node temp;

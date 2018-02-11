@@ -8,7 +8,7 @@ public class TasksModel {
     /**
      * Find later date from tasks
      * @param tasks
-     * @return
+     * @return later date from taskList
      */
     public static Date getLaterDate(Iterable<TaskModel> tasks){
         Date temp = new Date();
@@ -25,7 +25,7 @@ public class TasksModel {
      * @param tasks
      * @param start
      * @param end
-     * @return
+     * @return task list in current time interval
      */
     public static Iterable<TaskModel> incoming(Iterable<TaskModel> tasks, Date start, Date end) {
         ArrayTaskList arr = new ArrayTaskList();
@@ -46,7 +46,7 @@ public class TasksModel {
      * @param tasks
      * @param start
      * @param end
-     * @return
+     * @return Map: key = Date, value = Set tasks
      */
     public static SortedMap<Date, Set<TaskModel>> calendar(Iterable<TaskModel> tasks, Date start, Date end) {
         ArrayTaskList incoming = (ArrayTaskList)incoming(tasks, start,end);

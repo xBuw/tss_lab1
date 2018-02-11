@@ -66,8 +66,8 @@ public class TaskListController {
 
     /**
      * Print question in CLI, and return answer.
-     * @param string
-     * @return
+     * @param string question string
+     * @return answer string
      */
     public static String question(String string) {
         System.out.print(string);
@@ -111,6 +111,7 @@ public class TaskListController {
      * @param a
      * @param b
      * @param comparable
+     * @return True if comparable number is less then b and more  then a. Else False
      */
     public static boolean isValid(int a, int b, String comparable){
         if(comparable==null)

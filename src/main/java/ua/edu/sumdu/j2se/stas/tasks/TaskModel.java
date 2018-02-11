@@ -120,7 +120,7 @@ public class TaskModel implements Cloneable, Serializable {
     /**
      * Set time in current task
      * @param time
-     * @return
+     * @return current task
      * @throws IllegalArgumentException
      */
     public TaskModel setTime(Date time) throws IllegalArgumentException{
@@ -138,6 +138,7 @@ public class TaskModel implements Cloneable, Serializable {
      * @param start    - first call task
      * @param end      - last call task
      * @param interval - interval with tasks
+     * @return current task
      */
     public TaskModel setTime(Date start, Date end, int interval) throws IllegalArgumentException{
         if (!(title != null && start != null && end != null && interval >= 0)) {
@@ -195,6 +196,7 @@ public class TaskModel implements Cloneable, Serializable {
 
     /**
      * String format
+     * @return string representation task
      */
     public String toString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");

@@ -72,7 +72,7 @@ public class ArrayTaskList extends TaskListModel implements Cloneable, Serializa
     /**
      * remove current task
      * @param task
-     * @return
+     * @return True if task removed, else False
      */
     public boolean remove(TaskModel task) {
         for (int i = 0; i < countTask; i++)
@@ -89,8 +89,8 @@ public class ArrayTaskList extends TaskListModel implements Cloneable, Serializa
 
     /**
      * get task from index
-     * @param index
-     * @return
+     * @param index tasks index
+     * @return task from index
      */
     public TaskModel getTask(int index) {
         if (index >= 0 && index < this.size()) {
