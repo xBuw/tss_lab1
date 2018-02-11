@@ -19,7 +19,7 @@ public class TaskListController {
     private static String nameFile = "log4j.properties";
     public static Logger logger = Logger.getLogger("logfile");
     private static final SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-    private static final String dateFormat = "Input new task start time. Format: yyyy-mm-dd hh-mm: ";
+    private static final String dateFormat = "Format: yyyy-mm-dd hh-mm: ";
     private static final String interFormat = "Input new interval, count minutes, mm[..m]: ";
     private static final String wrongArgument = "Wrong argument";
     private static String line;
@@ -121,7 +121,7 @@ public class TaskListController {
         if (comparable == null)
             return false;
         try {
-            for (int i = a; i < b; i++)
+            for (int i = a; i <= b; i++)
                 if (i == Integer.parseInt(comparable))
                     return true;
         } catch (NumberFormatException e) {
@@ -207,16 +207,14 @@ public class TaskListController {
                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
                     break;
                 case "2":
-                    Date start, end;
                     String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                    if (!(repeatable.equals("1") || repeatable.equals("2"))) {
+                    while(!isValid(1,2,repeatable)) {
                         System.out.println("Error argument");
-                        break;
+                        repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
                     }
-                    start = dateForm.parse(question(dateFormat));
+                    Date start = getValidDate("Input new task start time. ");
                     if (repeatable.equals("1")) {
-                        String endString = question(dateFormat);
-                        end = dateForm.parse(endString);
+                        Date end = getValidDate("Input new task end time. ");
                         editTask(editTask, editTask.clone().setTime(start, end, Integer.parseInt(question(interFormat)) * 60));
                     } else {
                         editTask(editTask, editTask.clone().setTime(start));
@@ -232,19 +230,33 @@ public class TaskListController {
         } while (!isValid(1, 3, line));
     }
 
+    public static Date getValidDate(String inputMessage) throws IOException {
+        Date date = null;
+        while(date == null) {
+            try {
+                date = dateForm.parse(question(inputMessage + dateFormat));
+            } catch (ParseException e) {
+                logger.error("Incorrect date", e);
+                date = null;
+            }
+        }
+        return date;
+    }
+
     public static void addNewTask() throws ParseException, IOException {
         TaskModel tempTask;
-        do{
-            question("Print (1) if you want Repeatable task, or (2) for Single");
+        line = question("Print (1) if you want Repeatable task, or (2) for Single");
+        while (!isValid(1, 2, line)) {
             System.out.println(line + " - WRONG type argument!");
-        }while(isValid(1,2,line));
+            line = question("Print (1) if you want Repeatable task, or (2) for Single");
+        }
         String title = question("Input task name: ");
 
-        Date startDate = dateForm.parse(question(dateFormat));
+        Date startDate = getValidDate("Input new task start time. ");
         if (line.equals("2")) {
             tempTask = new TaskModel(title, startDate);
         } else {
-            Date endDate = dateForm.parse(question(dateFormat));
+            Date endDate = getValidDate("Input new task end time. ");
             tempTask = new TaskModel(title, startDate, endDate, Integer.parseInt(question(interFormat)) * 60);
         }
         String active = question("Print (1) if you want active task, or (2) for inactive: ");
