@@ -195,7 +195,7 @@ public class TaskListController {
         }
     }
 
-    public static void addNewTask() throws ParseException, IOException {
+    public static void editTaskMenu() throws ParseException, IOException {
         printALlTasks();
         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
         do {
@@ -232,7 +232,7 @@ public class TaskListController {
         } while (!isValid(1, 3, line));
     }
 
-    public static void editTaskMenu() throws ParseException, IOException {
+    public static void addNewTask() throws ParseException, IOException {
         TaskModel tempTask;
         do{
             question("Print (1) if you want Repeatable task, or (2) for Single");
@@ -272,10 +272,10 @@ public class TaskListController {
                 logger.debug("Selection menu item...");
                 switch (line) {
                     case "1":
-                        addNewTask();
+                        editTaskMenu();
                         break;
                     case "2":
-                        editTaskMenu();
+                        addNewTask();
                         break;
                     case "3":
                         editTask(list.getTask(Integer.valueOf(question("Remove task.input index task: "))), null);
