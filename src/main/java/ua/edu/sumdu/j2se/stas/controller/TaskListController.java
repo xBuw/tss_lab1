@@ -19,9 +19,8 @@ public class TaskListController {
     private static String nameFile = "log4j.properties";
     public static Logger logger = Logger.getLogger("logfile");
     private static final SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-    private static final SimpleDateFormat interForm = new SimpleDateFormat("dd-HH-mm-ss");
     private static final String dateFormat = "Input new task start time. Format: yyyy-mm-dd hh-mm: ";
-    private static final String interFormat = "Input new interval dd-hh-mm-ss: ";
+    private static final String interFormat = "Input new interval, count minutes, mm[..m]: ";
     private static final String wrongArgument = "Wrong argument";
     private static String line;
 
@@ -197,6 +196,9 @@ public class TaskListController {
                 logger.debug("Selection menu item...");
                 switch (line) {
                     case "1":
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.println(i + ": " + list.getTask(i));
+                        }
                         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
                         do{
                             System.out.println(editTask);
@@ -207,7 +209,7 @@ public class TaskListController {
                                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
                                     break;
                                 case "2":
-                                    Date start, end, interval;
+                                    Date start, end;
                                     String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
                                     if(!(repeatable.equals("1")||repeatable.equals("2"))){
                                         System.out.println("Error argument");
@@ -217,8 +219,7 @@ public class TaskListController {
                                     if(repeatable.equals("1")){
                                         String endString = question(dateFormat);
                                         end = dateForm.parse(endString);
-                                        interval = interForm.parse(question(interFormat));
-                                        editTask(editTask, editTask.clone().setTime(start, end, (int) interval.getTime() / 1000 + 60 * 60 * 27));
+                                        editTask(editTask, editTask.clone().setTime(start, end, Integer.parseInt(question(interFormat))*60));
                                     }else {
                                         editTask(editTask, editTask.clone().setTime(start));
                                     }
@@ -246,8 +247,7 @@ public class TaskListController {
                             tempTask = new TaskModel(title, startDate);
                         }else{
                             Date endDate = dateForm.parse(question(dateFormat));
-                            Date interval = interForm.parse(question(interFormat));
-                            tempTask = new TaskModel(title, startDate, endDate, (int) interval.getTime() / 1000 + 60 * 60 * 27);
+                            tempTask = new TaskModel(title, startDate, endDate, Integer.parseInt(question(interFormat))*60);
                         }
                         String active = question("Print (1) if you want active task, or (2) for inactive: ");
                         if ( active.equals("2") ) {
