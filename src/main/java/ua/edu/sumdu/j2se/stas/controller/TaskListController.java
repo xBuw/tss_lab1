@@ -28,6 +28,7 @@ public class TaskListController {
     /**
      * Remove old task and add new task.
      * If one of them empty, only add task or only remove task.
+     *
      * @param oldTask
      * @param newTask
      */
@@ -71,7 +72,7 @@ public class TaskListController {
      * @param string question string
      * @return answer string
      */
-    public static String question(String string) {
+    public static String question(String string) throws IOException {
         System.out.print(string);
         return sc.nextLine();
     }
@@ -143,7 +144,7 @@ public class TaskListController {
     /**
      * Load tasksList from files, or create new empty list.
      */
-    public static void getTaskListFromFile() {
+    public static void getTaskListFromFile() throws IOException {
         File file = null;
         do {
             line = question("1 - load taskList from dir taskLists/... \n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
@@ -194,7 +195,7 @@ public class TaskListController {
         }
     }
 
-    public static void addNewTask() {
+    public static void addNewTask() throws ParseException, IOException {
         printALlTasks();
         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
         do {
@@ -231,17 +232,16 @@ public class TaskListController {
         } while (!isValid(1, 3, line));
     }
 
-    public static void editTaskMenu() {
+    public static void editTaskMenu() throws ParseException, IOException {
         TaskModel tempTask;
-        String type = question("Print (1) if you want Repeatable task, or (2) for Single");
-        if (!(type.equals("1") || type.equals("2"))) {
-            System.out.println(type + " - WRONG type argument!");
-            break;
-        }
+        do{
+            question("Print (1) if you want Repeatable task, or (2) for Single");
+            System.out.println(line + " - WRONG type argument!");
+        }while(isValid(1,2,line));
         String title = question("Input task name: ");
 
         Date startDate = dateForm.parse(question(dateFormat));
-        if (type.equals("2")) {
+        if (line.equals("2")) {
             tempTask = new TaskModel(title, startDate);
         } else {
             Date endDate = dateForm.parse(question(dateFormat));
@@ -258,7 +258,7 @@ public class TaskListController {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         printWelcomeMessage();
         PropertyConfigurator.configure(nameFile);
