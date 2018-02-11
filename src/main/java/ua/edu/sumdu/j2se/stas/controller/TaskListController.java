@@ -143,7 +143,7 @@ public class TaskListController {
     public static void getTaskListFromFile(){
         File file = null;
         do{
-            line = question("1 - load taskList from file1\n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
+            line = question("1 - load taskList from dir taskLists/... \n2 - continue work with old taskList\n3 - create new taskList\nInput number: ");
             if (line.equals("1")){
                 File dir = new File("taskLists");
                 String arr[] = dir.list();
