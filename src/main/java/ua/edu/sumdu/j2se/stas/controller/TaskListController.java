@@ -20,7 +20,7 @@ public class TaskListController {
     public static Logger logger = Logger.getLogger("logfile");
     private static final SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd HH-mm");
     private static final String dateFormat = "Format: yyyy-mm-dd hh-mm: ";
-    private static final String interFormat = "Input new interval, count minutes, mm[..m]: ";
+    private static final String interFormat = "Input new interval, amount of minutes: ";
     private static final String wrongArgument = "Wrong argument";
     private static String line;
 
