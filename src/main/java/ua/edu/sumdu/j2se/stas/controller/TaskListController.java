@@ -169,7 +169,7 @@ public class TaskListController {
         if (file.exists()) {
             TaskIOModel.readText(list, file);
             logger.info("Read tasks from file:" + file.getAbsolutePath());
-        } else {
+        } else if (!line.equals("3")) {
             System.out.println("Sorry...your task list is lost...");
             logger.error("File not found");
         }
