@@ -236,6 +236,7 @@ public class TaskListController {
             try {
                 date = dateForm.parse(question(inputMessage + dateFormat));
             } catch (ParseException e) {
+                System.out.println("Incorrect date");
                 logger.error("Incorrect date", e);
                 date = null;
             }
