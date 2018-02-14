@@ -54,7 +54,7 @@ public class TasksModel {
         Set<TaskModel> tempTaskSet;
         for (TaskModel task : incoming) {
             Date tempDate = new Date(start.getTime());
-            while(task.nextTimeAfter(tempDate)!=null && task.nextTimeAfter(tempDate).compareTo(end) <= 0){
+            if(task.nextTimeAfter(tempDate)!=null && task.nextTimeAfter(tempDate).compareTo(end) <= 0){
                 tempDate = new Date(task.nextTimeAfter(tempDate).getTime());
                 tempTaskSet = map.get(tempDate);
                 if(tempTaskSet!=null){
