@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.stas;
+package ua.edu.sumdu.j2se.stas.notification;
 
 import ua.edu.sumdu.j2se.stas.controller.TaskListController;
 import ua.edu.sumdu.j2se.stas.tasks.TaskModel;

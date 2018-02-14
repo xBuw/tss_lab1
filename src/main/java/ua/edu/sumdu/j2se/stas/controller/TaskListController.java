@@ -2,7 +2,7 @@ package ua.edu.sumdu.j2se.stas.controller;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import ua.edu.sumdu.j2se.stas.NotificationManager;
+import ua.edu.sumdu.j2se.stas.notification.NotificationManager;
 import ua.edu.sumdu.j2se.stas.tasks.*;
 
 import java.io.*;
@@ -104,7 +104,6 @@ public class TaskListController {
         System.out.println("2 - time");
         System.out.println("3 - activity");
         System.out.println("----------------------------------------------------------");
-
 
     }
 
@@ -208,7 +207,7 @@ public class TaskListController {
                     break;
                 case "2":
                     String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                    while(!isValid(1,2,repeatable)) {
+                    while (!isValid(1, 2, repeatable)) {
                         System.out.println("Error argument");
                         repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
                     }
@@ -232,7 +231,7 @@ public class TaskListController {
 
     public static Date getValidDate(String inputMessage) throws IOException {
         Date date = null;
-        while(date == null) {
+        while (date == null) {
             try {
                 date = dateForm.parse(question(inputMessage + dateFormat));
             } catch (ParseException e) {
