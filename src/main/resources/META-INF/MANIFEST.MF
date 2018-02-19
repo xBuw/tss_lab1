@@ -1,5 +1,6 @@
 manifest-Version: 1.0
 Built-By: xBuw
 Created-By: Apache Maven
-Main-Class: ua.edu.sumdu.j2se.stas.TaskListController
+Main-Class: ua.edu.sumdu.j2se.stas.controller.TaskListController
 Class-Path: dependency/log4j-1.2.17.jar
+

@@ -297,8 +297,8 @@ public class TaskListController {
                         printALlTasks();
                         break;
                     case "5":
-                        Date start = dateForm.parse(question("Input start time" + dateFormat));
-                        Date end = dateForm.parse(question("Input end time" + dateFormat));
+                        Date start = getValidDate("Input start time");
+                        Date end = getValidDate("Input end time");
                         SortedMap<Date, Set<TaskModel>> calendar = TasksModel.calendar(list, start, end);
                         printCalendar(calendar);
                         break;
