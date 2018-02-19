@@ -97,12 +97,16 @@ public class TaskListController {
     /**
      * Print task edit menu
      */
-    public static void printTaskEditMenu() {
+    public static void printTaskEditMenu(boolean isRepetable) {
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------Edit Task Menu Manager--------------------");
         System.out.println("1 - title");
         System.out.println("2 - time");
         System.out.println("3 - activity");
+        System.out.println("4 - type");
+        if (isRepetable) {
+            System.out.println("5 - interval");
+        }
         System.out.println("----------------------------------------------------------");
 
     }
@@ -199,20 +203,15 @@ public class TaskListController {
         TaskModel editTask = list.getTask(Integer.valueOf(question("Menu edit task. input index task: ")));
         do {
             System.out.println(editTask);
-            printTaskEditMenu();
+            printTaskEditMenu(editTask.isRepeated());
             line = question("What you want change? Print number: ");
             switch (line) {
                 case "1":
                     editTask(editTask, editTask.clone().setTitle(question("Input new task title: ")));
                     break;
                 case "2":
-                    String repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                    while (!isValid(1, 2, repeatable)) {
-                        System.out.println("Error argument");
-                        repeatable = question("Print (1) if you want Repeatable task, or (2) for Single");
-                    }
                     Date start = getValidDate("Input new task start time. ");
-                    if (repeatable.equals("1")) {
+                    if (editTask.isRepeated()) {
                         Date end = getValidDate("Input new task end time. ");
                         editTask(editTask, editTask.clone().setTime(start, end, Integer.parseInt(question(interFormat)) * 60));
                     } else {
@@ -222,11 +221,25 @@ public class TaskListController {
                 case "3":
                     editTask(editTask, editTask.clone().setActive(!editTask.isActive()));
                     break;
+                case "4":
+                    TaskModel newTask;
+                    if (editTask.isRepeated()) {
+                        newTask = new TaskModel(editTask.getTitle(), editTask.getTime());
+                    } else {
+                        newTask =new TaskModel(editTask.getTitle(), editTask.getTime(), editTask.getTime(), 60);
+                    }
+                    editTask(editTask, newTask.clone().setActive(editTask.isActive()));
+                    break;
+                case "5":
+                    if (editTask.isRepeated()) {
+                        int newInterval = Integer.parseInt(question(interFormat)) * 60;
+                        editTask(editTask, editTask.clone().setTime(editTask.getStartTime(), editTask.getEndTime(), newInterval));
+                    }
                 default:
                     logger.error(line + wrongArgument);
             }
             logger.info("Edit task");
-        } while (!isValid(1, 3, line));
+        } while (!isValid(1, 4 + (editTask.isRepeated() ? 1 : 0), line));
     }
 
     public static Date getValidDate(String inputMessage) throws IOException {
