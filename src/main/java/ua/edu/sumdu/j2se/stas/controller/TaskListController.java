@@ -226,7 +226,9 @@ public class TaskListController {
                     if (editTask.isRepeated()) {
                         newTask = new TaskModel(editTask.getTitle(), editTask.getTime());
                     } else {
-                        newTask =new TaskModel(editTask.getTitle(), editTask.getTime(), editTask.getTime(), 60);
+                        Date end = getValidDate("Input new task end time. ");
+                        int newInterval = Integer.parseInt(question(interFormat)) * 60;
+                        newTask =new TaskModel(editTask.getTitle(), editTask.getTime(), end, newInterval);
                     }
                     editTask(editTask, newTask.clone().setActive(editTask.isActive()));
                     break;
